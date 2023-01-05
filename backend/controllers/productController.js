@@ -1,13 +1,14 @@
 const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncError = require('../middleware/catchAsyncError')
-
+const ApiFeatures = require("../utils/apiFeatures")
 
 const productController = {
 
     
     getAllProducts :catchAsyncError(async (req,res)=>{
-        const products = await Product.find();
+        const apiFeature = new ApiFeatures(Product.find(),req.query).search().filter()
+        const products = await apiFeature.query;
         res.status(200).json({
             success:true,
             products
