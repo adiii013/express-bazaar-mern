@@ -7,11 +7,14 @@ const productController = {
 
     
     getAllProducts :catchAsyncError(async (req,res)=>{
-        const apiFeature = new ApiFeatures(Product.find(),req.query).search().filter()
+        const resultPerPage = 5;
+        const productCount = await Product.countDocuments();
+        const apiFeature = new ApiFeatures(Product.find(),req.query).search().filter().pagination(resultPerPage)
         const products = await apiFeature.query;
         res.status(200).json({
             success:true,
-            products
+            products,
+            productCount
         }) 
     }),
 
