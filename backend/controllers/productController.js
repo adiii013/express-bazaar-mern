@@ -4,7 +4,6 @@ const catchAsyncError = require('../middleware/catchAsyncError')
 const ApiFeatures = require("../utils/apiFeatures")
 
 const productController = {
-
     
     getAllProducts :catchAsyncError(async (req,res)=>{
         const resultPerPage = 5;
