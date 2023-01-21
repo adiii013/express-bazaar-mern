@@ -81,6 +81,61 @@ const userController = {
             await user.save({validateBeforeSave:false})
             return next(new ErrorHandler(error.message,500))
         }
+    }),
+
+    // Get user details
+
+    getUserDetails : catchAsyncError(async(req,res,next)=>{
+        const user = await User.findById(req.user.id);
+
+        res.status(200).json({
+            success:true,
+            user
+        })
+    }) ,
+
+    //Update user Profile
+
+    updateUserProfile: catchAsyncError(async(req,res,next)=>{
+       const newUserData = {
+        name:req.body.name,
+        email:req.body.email,
+       }
+
+       const user = await User.findByIdAndUpdate(req.user.id,newUserData,{
+        new:true,
+        runValidators:true,
+        useFindAndModify:false
+       })
+
+       res.status(200).json({
+        success:true,
+        user
+       })
+    }),
+
+    //Get all user admin
+
+    getAllUser:catchAsyncError(async(req,res,next)=>{
+        const users = await User.find();
+        res.status(200).json({
+            success:true,
+            users
+        })
+    }),
+
+    //Get single user admin
+
+    getSingleUser: catchAsyncError(async(req,res,next)=>{
+        const user = await User.findById(req.params.id);
+        console.log("Hello");
+        if(!user){
+            return next(new ErrorHandler(`User does not exist with id: ${req.params.id}`))
+        }
+        res.status(200).json({
+            success:true,
+            user,
+        })
     })
 }
 

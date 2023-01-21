@@ -8,12 +8,12 @@ router
   .route("/products")
   .get(productController.getAllProducts);
 router
-  .route("/products/new")
+  .route("/admin/products/new")
   .post(Authentication.isAuthenticatedUser, Authentication.authorizeRoles("admin") , productController.createProduct);
 router
-  .route("/products/:id")
+  .route("/admin/products/:id")
   .put(Authentication.isAuthenticatedUser, Authentication.authorizeRoles("admin") , productController.updateProduct)
   .delete(Authentication.isAuthenticatedUser, Authentication.authorizeRoles("admin") , productController.deleteProduct)
-  .get(productController.getProductDetails);
+router.route("/products/:id").get(productController.getProductDetails);
 
 module.exports = router;
