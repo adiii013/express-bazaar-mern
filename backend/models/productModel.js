@@ -22,6 +22,12 @@ const productSchema = mongoose.Schema({
   productId:{
     type: String,
   },
+  manfYear:{
+    type:String
+  },
+  manfPlace:{
+    type:String
+  },
   images: [
     {
       public_id: {
