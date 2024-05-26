@@ -42,6 +42,8 @@ import ProductReviews from "./component/Admin/ProductReviews";
 import Contact from "./component/layout/Contact/Contact";
 import About from "./component/layout/About/About";
 import NotFound from "./component/layout/Not Found/NotFound";
+import Generate from "./component/QRcode/Generate.jsx";
+import Verify from "./component/QRcode/Verify.jsx";
 
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -108,7 +110,12 @@ function App() {
 
         <Route exact path="/login" component={LoginSignUp} />
 
+        <Route exact path="/verify/product" component={LoginSignUp} />
+
         <Route exact path="/cart" component={Cart} />
+
+        <Route exact path="/generate/qrcode/:id" component={Generate} />
+        <Route exact path="/verify/qrcode" component={Verify} />
 
         <ProtectedRoute exact path="/shipping" component={Shipping} />
 

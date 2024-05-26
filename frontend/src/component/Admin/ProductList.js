@@ -22,7 +22,7 @@ const ProductList = ({ history }) => {
   const alert = useAlert();
 
   const { error, products } = useSelector((state) => state.products);
-
+  console.log(products)
   const { error: deleteError, isDeleted } = useSelector(
     (state) => state.product
   );
@@ -57,14 +57,14 @@ const ProductList = ({ history }) => {
     {
       field: "name",
       headerName: "Name",
-      minWidth: 350,
-      flex: 1,
+      minWidth: 100,
+      flex: 0.5,
     },
     {
       field: "stock",
       headerName: "Stock",
       type: "number",
-      minWidth: 150,
+      minWidth: 100,
       flex: 0.3,
     },
 
@@ -72,15 +72,17 @@ const ProductList = ({ history }) => {
       field: "price",
       headerName: "Price",
       type: "number",
-      minWidth: 270,
-      flex: 0.5,
+      minWidth: 50,
+      flex: 0.3,
     },
 
     {
       field: "actions",
-      flex: 0.3,
+      flex: 1,
       headerName: "Actions",
-      minWidth: 150,
+      minWidth: 200,
+      display:"flex",
+      gap:10,
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -88,6 +90,10 @@ const ProductList = ({ history }) => {
           <Fragment>
             <Link to={`/admin/product/${params.getValue(params.id, "id")}`}>
               <EditIcon />
+            </Link>
+
+            <Link to={`/generate/qrcode/${params.getValue(params.id, "productId")}`}>
+              QRCode
             </Link>
 
             <Button
@@ -109,6 +115,7 @@ const ProductList = ({ history }) => {
     products.forEach((item) => {
       rows.push({
         id: item._id,
+        productId:item.productId,
         stock: item.Stock,
         price: item.price,
         name: item.name,

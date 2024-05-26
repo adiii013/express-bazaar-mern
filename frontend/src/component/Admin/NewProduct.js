@@ -5,6 +5,8 @@ import { clearErrors, createProduct } from "../../actions/productAction";
 import { useAlert } from "react-alert";
 import { Button } from "@material-ui/core";
 import MetaData from "../layout/MetaData";
+import web3 from "../../utils/web3"
+import factory from "../../utils/factory";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import DescriptionIcon from "@material-ui/icons/Description";
 import StorageIcon from "@material-ui/icons/Storage";
@@ -15,11 +17,15 @@ import { NEW_PRODUCT_RESET } from "../../constants/productConstants";
 
 const NewProduct = ({ history }) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const alert = useAlert();
 
   const { loading, error, success } = useSelector((state) => state.newProduct);
 
   const [name, setName] = useState("");
+  const [manfYear, setManfYear] = useState("");
+  const [productId,setProductId] = useState('');
+  const [manfPlace, setManfPlace] = useState("");
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -50,17 +56,27 @@ const NewProduct = ({ history }) => {
     }
   }, [dispatch, alert, error, history, success]);
 
-  const createProductSubmitHandler = (e) => {
+  const createProductSubmitHandler = async (e) => {
     e.preventDefault();
-
+    const accounts = await web3.eth.getAccounts();
     const myForm = new FormData();
-
+    await factory.methods
+    .createProduct(name, user.name, manfYear, manfPlace, productId)
+    .send({
+      from: accounts[0],
+    });
+    const products = await factory.methods.getProducts().call();
+    const product = products[products.length - 1];
+    
     myForm.set("name", name);
     myForm.set("price", price);
     myForm.set("description", description);
     myForm.set("category", category);
     myForm.set("Stock", Stock);
-
+    myForm.set("productId",product);
+    myForm.set("manfYear",manfYear);
+    myForm.set("manfPlace",manfPlace);
+    
     images.forEach((image) => {
       myForm.append("images", image);
     });
@@ -133,6 +149,30 @@ const NewProduct = ({ history }) => {
             </div>
 
             <div>
+              <DescriptionIcon />
+
+              <textarea
+                placeholder="Manufacture year"
+                value={manfYear}
+                onChange={(e) => setManfYear(e.target.value)}
+                cols="30"
+                rows="1"
+              ></textarea>
+            </div>
+
+            <div>
+              <DescriptionIcon />
+
+              <textarea
+                placeholder="Manufacturer place"
+                value={manfPlace}
+                onChange={(e) => setManfPlace(e.target.value)}
+                cols="30"
+                rows="1"
+              ></textarea>
+            </div>
+
+            <div>
               <AccountTreeIcon />
               <select onChange={(e) => setCategory(e.target.value)}>
                 <option value="">Choose Category</option>
@@ -143,6 +183,8 @@ const NewProduct = ({ history }) => {
                 ))}
               </select>
             </div>
+
+            
 
             <div>
               <StorageIcon />
